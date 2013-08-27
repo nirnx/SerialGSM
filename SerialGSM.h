@@ -31,7 +31,19 @@ public:
   void Message(char * var1);
   char * Message();
   void Boot();
-
+  static const int STATUS_SIM_REMOVED = 0;
+  static const int STATUS_SIM_INSERTED = 1;
+  static const int STATUS_RINGING = 2;
+  static const int STATUS_MODULE_PARTIALLYREADY = 3;
+  static const int STATUS_MODULE_READY = 4;
+  static const int STATUS_ID_RELEASED_CALLS = 5;
+  static const int STATUS_RELEASED_CALL_ID = 6;
+  static const int STATUS_NETWORK_EMERGENCY_SERVICE = 7;
+  static const int STATUS_NETWORK_SERVICE_LOST = 8;
+  static const int STATUS_AUDIO_ON = 9;
+  static const int STATUS_PHONEBOOK_INIT = 10;
+  static const int STATUS_NETWORK_REGISTERED = 11;
+  
   boolean verbose;
   char sendernumber[PHONESIZE + 1];
   char rcpt[PHONESIZE + 1];
