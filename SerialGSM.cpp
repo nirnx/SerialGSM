@@ -97,6 +97,38 @@ void SerialGSM::StartSMS(){
 
 }
 
+void SerialGSM::Call(char * cellnumber){
+  this->Rcpt(cellnumber);
+  if (verbose) Serial.println(rcpt);
+    
+  Serial.print("ATD");
+  this->print("ATD");
+  Serial.print(rcpt);
+  this->print(rcpt);
+  
+  //End Command - ASCII carriage return
+  this->print(char(13));
+  Serial.println();
+  
+  //Let the module process
+  delay(500);
+  this->ReadLine();
+}
+
+void SerialGSM::Hangup(){
+
+  Serial.print("ATH");
+  this->print("ATH");
+  
+  //End Command - ASCII carriage return
+  this->print(char(13));
+  Serial.println();
+
+  //Let the module process
+  delay(500);
+  this->ReadLine();
+}
+
 int SerialGSM::ReadLine(){
   static int pos=0;
   char nc;

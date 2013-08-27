@@ -17,6 +17,8 @@ public:
   void Reset();
   void EndSMS();
   void StartSMS();
+  void Call(char * cellnumber);
+  void Hangup();
   int ReadLine();
   int GetGSMStatus();
   int ReceiveSMS();
