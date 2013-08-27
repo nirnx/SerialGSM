@@ -58,8 +58,8 @@ void SerialGSM::DeleteAllSMS(){
 }
 
 void SerialGSM::Reset(){
-  Serial.println("AT+CFUN=1,1"); // Reset Modem
-  this->println("AT+CFUN=1,1"); // Reset Modem
+  Serial.println("AT+CFUN=0,1"); // Reset Modem, Disable Auto Power Saving
+  this->println("AT+CFUN=0,1"); // Reset Modem, Disable Auto Power Saving
   delay(200);
   this->ReadLine();
 }
