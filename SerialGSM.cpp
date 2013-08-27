@@ -9,11 +9,14 @@
 // error codes
 // http://www.developershome.com/sms/resultCodes2.asp
 #include <SerialGSM.h>
+#include <string.h>
+#include <stdlib.h>
 
 SerialGSM::SerialGSM(int rxpin,int txpin):
 SoftwareSerial(rxpin,txpin)
 {
  verbose=false;
+ laststatuscode=0;
 }
 
 void SerialGSM::FwdSMS2Serial(){
@@ -117,6 +120,39 @@ int SerialGSM::ReadLine(){
   return 0;
 }
 
+// GetGSMStatus returns one of the following status codes as reported from the GSM module
+// 0 SIM card removed 
+// 1 SIM card inserted 
+// 2 Ring melody 
+// 3 AT module is partially ready 
+// 4 AT module is totally ready 
+// 5 ID of released calls 
+// 6 Released call whose ID=<idx> 
+// 7 The network service is available for an emergency call 
+// 8 The network is lost 
+// 9 Audio ON 
+// 10 Show the status of each phonebook after init phrase 
+// 11 Registered to network
+int SerialGSM::GetGSMStatus(){
+  char status[2];
+  if (this->ReadLine()){ 
+    //Parse the Status Code
+    if (strstr(inmessage, "SIND: ") != NULL){
+        int pos = 6;
+        if(strstr(inmessage, "+SIND:")) pos++; 
+        
+		//Read in all numbers
+        int i = 0;
+        while(inmessage[pos + i] != NULL and inmessage[pos + i] != ','){
+            status[i] = inmessage[pos + i];
+            i++;
+        }
+		
+		laststatuscode = atoi(status);
+    }
+  }
+  return laststatuscode;
+}
 
 int SerialGSM::ReceiveSMS(){
   static boolean insms=0;

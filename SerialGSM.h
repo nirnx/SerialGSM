@@ -18,6 +18,7 @@ public:
   void EndSMS();
   void StartSMS();
   int ReadLine();
+  int GetGSMStatus();
   int ReceiveSMS();
   void Verbose(boolean var1);
   boolean Verbose();
@@ -37,7 +38,7 @@ public:
   
 protected:
   unsigned long lastrec;
-  
+  int laststatuscode;
 };
 
 #endif /* not defined _SerialGSM_H */
