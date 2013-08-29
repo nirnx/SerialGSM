@@ -167,7 +167,6 @@ int SerialGSM::ReadLine(){
 // 11 Registered to network
 int SerialGSM::GetGSMStatus(){
   char status[2];
-  if (this->ReadLine()){ 
     //Parse the Status Code
     if (strstr(inmessage, "SIND: ") != NULL){
         int pos = 6;
@@ -182,13 +181,11 @@ int SerialGSM::GetGSMStatus(){
 		
 		laststatuscode = atoi(status);
     }
-  }
   return laststatuscode;
 }
 
 int SerialGSM::ReceiveSMS(){
   static boolean insms=0;
-  if (this->ReadLine()){
   // Get the number of the sms sender in order to be able to reply
 	if ( strstr(inmessage, "CMT: ") != NULL ){
 	    insms=1;
@@ -205,7 +202,6 @@ int SerialGSM::ReceiveSMS(){
 			return 1;
 		}
 	}
-  }
   return 0;
 }
 
