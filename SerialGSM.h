@@ -22,6 +22,7 @@ public:
   int ReadLine();
   int GetGSMStatus();
   int ReceiveSMS();
+  int ReceiveCall();
   void Verbose(boolean var1);
   boolean Verbose();
   void Sender(char * var1);

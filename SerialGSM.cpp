@@ -205,6 +205,26 @@ int SerialGSM::ReceiveSMS(){
   return 0;
 }
 
+int SerialGSM::ReceiveCall(){
+  static boolean incall = 0;
+	// Get the caller id
+	if ( strstr(inmessage, "CLIP: ") != NULL ){
+	    incall=1;
+	    int sf=6;
+	    if(strstr(inmessage, "+CLIP:")) sf++; 
+		    for (int i=0;i < PHONESIZE;i++){
+		      sendernumber[i]=inmessage[sf+i];
+		    }
+		sendernumber[PHONESIZE]='\0';
+		return 0;
+	 }else{ 
+		if(incall) {
+			incall=0;
+			return 1;
+		}
+	}
+  return 0;
+}
 
 boolean SerialGSM::Verbose(){
 	return verbose;
