@@ -4,7 +4,7 @@
 #include <SoftwareSerial.h>
 
 #define SERIALTIMEOUT 2000
-#define PHONESIZE 13
+#define PHONESIZE 12
 #define MAXMSGLEN 160
 
 class SerialGSM : public SoftwareSerial {
