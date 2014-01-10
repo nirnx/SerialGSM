@@ -31,6 +31,12 @@ void SerialGSM::FwdSMS2Serial(){
 }
 
 void SerialGSM::SendSMS(char * cellnumber,char * outmsg){
+  if (strlen(outmsg) > 140)
+  {
+	Serial.println("Error: SMS Message was longer than 140 characters.");
+	return;
+  }
+  
   this->Rcpt(cellnumber);
   if (verbose) Serial.println(rcpt);
   this->StartSMS();
