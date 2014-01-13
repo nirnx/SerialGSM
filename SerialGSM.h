@@ -21,6 +21,7 @@ public:
   void Hangup();
   int ReadLine();
   int GetGSMStatus();
+  boolean ErrorOccured();
   int ReceiveSMS();
   int ReceiveCall();
   void Verbose(boolean var1);
@@ -54,6 +55,7 @@ public:
 protected:
   unsigned long lastrec;
   int laststatuscode;
+  boolean errorOccured;
 };
 
 #endif /* not defined _SerialGSM_H */

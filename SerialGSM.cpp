@@ -190,6 +190,13 @@ int SerialGSM::GetGSMStatus(){
   return laststatuscode;
 }
 
+boolean SerialGSM::ErrorOccured(){
+	if (strstr(inmessage, "ERROR") != NULL){
+		errorOccured = true;
+	}
+	return errorOccured;
+}
+
 int SerialGSM::ReceiveSMS(){
   static boolean insms=0;
   // Get the number of the sms sender in order to be able to reply
