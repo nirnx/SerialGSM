@@ -47,16 +47,16 @@ public:
   static const int STATUS_NETWORK_REGISTERED = 11;
   
   boolean verbose;
-  char sendernumber[PHONESIZE + 1];
-  char rcpt[PHONESIZE + 1];
-  char outmessage[160];
-  char inmessage[160];
+  char senderNumber[PHONESIZE + 1];
+  char recipient[PHONESIZE + 1];
+  char outMessage[160];
+  char inMessage[160];
   
 protected:
   unsigned long waitStart;
   boolean WaitResp(char * response, int timeout);
-  unsigned long lastrec;
-  int laststatuscode;
+  unsigned long lastRec;
+  int lastStatusCode;
   boolean errorOccured;
 };
 
