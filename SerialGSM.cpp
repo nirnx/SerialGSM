@@ -22,11 +22,11 @@ SoftwareSerial(rxpin,txpin)
 void SerialGSM::FwdSMS2Serial(){
   Serial.println("AT+CMGF=1"); // set SMS mode to text
   this->println("AT+CMGF=1"); // set SMS mode to text
-  delay(200);
+  WaitResp("OK", 200);
   this->ReadLine();
   Serial.println("AT+CNMI=3,3,0,0"); // set module to send SMS data to serial out upon receipt 
   this->println("AT+CNMI=3,3,0,0"); // set module to send SMS data to serial out upon receipt 
-  delay(200);
+  WaitResp("OK", 200);
   this->ReadLine();
 }
 
@@ -62,8 +62,7 @@ void SerialGSM::SendSMS(){
 void SerialGSM::DeleteAllSMS(){
   Serial.println("AT+CMGD=1,4"); // delete all SMS
   this->println("AT+CMGD=1,4"); // delete all SMS
-  delay(200);
-  this->ReadLine();
+  WaitResp("OK", 5000);
 }
 
 void SerialGSM::Reset(){
@@ -78,15 +77,14 @@ void SerialGSM::EndSMS(){
   this->print(char(26));  // ASCII equivalent of Ctrl-Z
   Serial.println();
 
-  //delay(5 * 1000); // the SMS module needs time to return to OK status
+  WaitResp("OK", 5000); // the SMS module needs time to return to OK status
 }
 
 void SerialGSM::StartSMS(){
 
   Serial.println("AT+CMGF=1"); // set SMS mode to text
   this->println("AT+CMGF=1"); // set SMS mode to text
-  delay(200);
-  this->ReadLine();
+  WaitResp("OK", 1000);
 
   Serial.print("AT+CMGS=");
   this->print("AT+CMGS=");
@@ -98,8 +96,8 @@ void SerialGSM::StartSMS(){
 
   this->println(char(34));  // ASCII equivalent of "
 
-  delay(500); // give the module some thinking time
-  this->ReadLine();
+  WaitResp(">", 500);	//Modem is ready for the SMS body
+  delay(500);			//Let the module think
 
 }
 
@@ -117,8 +115,7 @@ void SerialGSM::Call(char * cellnumber){
   Serial.println();
   
   //Let the module process
-  delay(500);
-  this->ReadLine();
+  WaitResp("OK", 3000);
 }
 
 void SerialGSM::Hangup(){
@@ -130,9 +127,7 @@ void SerialGSM::Hangup(){
   this->print(char(13));
   Serial.println();
 
-  //Let the module process
-  delay(500);
-  this->ReadLine();
+  WaitResp("OK", 1000);
 }
 
 int SerialGSM::ReadLine(){
@@ -237,6 +232,37 @@ int SerialGSM::ReceiveCall(){
 		}
 	}
   return 0;
+}
+
+//Returns true if successful, false if timed out
+boolean SerialGSM::WaitResp(char * response, int timeout){
+	waitStart = millis();
+	
+	while((millis() - waitStart) < timeout){
+		ReadLine();
+		if(strstr(inmessage, response)){
+			if (verbose){
+				Serial.print("GSM Returned: \"");
+				Serial.print(response);
+				Serial.println("\"");
+			}
+			return true;
+		}
+		
+		//Update status
+		GetGSMStatus();
+		
+		//Check for errors
+		ErrorOccured();
+	}
+	
+	if (verbose){
+		Serial.print("GSM Timeout waiting for: \"");
+		Serial.print(response);
+		Serial.println("\"");
+	}
+	
+	return false;
 }
 
 boolean SerialGSM::Verbose(){
