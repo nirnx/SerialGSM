@@ -53,7 +53,6 @@ public:
   char inMessage[160];
   
 protected:
-  unsigned long waitStart;
   boolean WaitResp(char * response, int timeout);
   unsigned long lastRec;
   int lastStatusCode;

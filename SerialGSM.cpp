@@ -236,12 +236,22 @@ int SerialGSM::ReceiveCall(){
 }
 
 //Returns true if successful, false if timed out
-boolean SerialGSM::WaitResp(char * response, int timeout){
-	waitStart = millis();
-
+boolean SerialGSM::WaitResp(char * response, int timeout){	
+	unsigned long waitStart = millis();
+	boolean responseReceived = false;
+	
+	//Check for an incoming event
+	boolean incoming = ReceiveCall() || ReceiveSMS();
+	
 	while((millis() - waitStart) < timeout){
 		ReadLine();
-		if(strstr(inMessage, response)){
+		
+		if (!responseReceived){
+			responseReceived = strstr(inMessage, response) != NULL;
+		}
+		
+		//Ensure incoming event is not truncated
+		if(responseReceived && !incoming){
 			if (verbose){
 				Serial.print("GSM Returned: \"");
 				Serial.print(response);
@@ -249,12 +259,10 @@ boolean SerialGSM::WaitResp(char * response, int timeout){
 			}
 			return true;
 		}
-
-		//Update status
-		GetGSMStatus();
-
-		//Check for errors
+	
+		//Update events
 		ErrorOccured();
+		GetGSMStatus();
 	}
 
 	if (verbose){
