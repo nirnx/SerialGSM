@@ -134,7 +134,7 @@ int SerialGSM::ReadLine(){
 	char nc;
 	while (this->available()){
 		nc=this->read();
-		if (nc == '\n' or (pos > MAXMSGLEN) or ((millis()> lastRec + SERIALTIMEOUT)and (pos > 0)) ){
+		if (nc == '\n' or (pos > MAXMSGLEN) or (((unsigned long)(millis() - lastRec) > SERIALTIMEOUT) and (pos > 0)) ){
 			nc='\0';
 			lastRec=millis();
 			inMessage[pos]=nc;
@@ -243,7 +243,7 @@ boolean SerialGSM::WaitResp(char * response, int timeout){
 	//Check for an incoming event
 	boolean incoming = ReceiveCall() || ReceiveSMS();
 	
-	while((millis() - waitStart) < timeout){
+	while((unsigned long)(millis() - waitStart) < timeout){
 		ReadLine();
 		
 		if (!responseReceived){
