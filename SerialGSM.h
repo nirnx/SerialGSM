@@ -1,13 +1,13 @@
 #ifndef _SerialGSM_H
 #define _SerialGSM_H
 #include "Arduino.h"
-#include <SoftwareSerial.h>
+#include <GSMSoftwareSerial.h>
 
 #define SERIALTIMEOUT 2000
 #define PHONESIZE 12
 #define MAXMSGLEN 160
 
-class SerialGSM : public SoftwareSerial {
+class SerialGSM : public GSMSoftwareSerial {
 public:
   SerialGSM(int rxpin,int txpin);
   void FwdSMS2Serial();

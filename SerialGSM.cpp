@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 SerialGSM::SerialGSM(int rxpin,int txpin):
-SoftwareSerial(rxpin,txpin)
+GSMSoftwareSerial(rxpin,txpin)
 {
 	verbose=false;
 	lastStatusCode=0;
