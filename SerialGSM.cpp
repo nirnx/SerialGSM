@@ -113,8 +113,10 @@ void SerialGSM::Call(char * cellnumber){
 	this->print(char(13));
 	if (verbose) Serial.println();
 
-	//Let the module process
-	WaitResp("OK", 3000);
+	//Wait for connection
+	WaitResp("+SIND: 5,1", 3000);	
+	//Wait for a ring
+	WaitResp("+SIND: 2",  10000);
 }
 
 void SerialGSM::Hangup(){
@@ -126,7 +128,7 @@ void SerialGSM::Hangup(){
 	this->print(char(13));
 	if (verbose) Serial.println();
 
-	WaitResp("OK", 1000);
+	WaitResp("OK", 2000);
 }
 
 int SerialGSM::ReadLine(){
