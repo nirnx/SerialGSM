@@ -76,6 +76,8 @@ void SerialGSM::EndSMS(){
 	this->print(char(26));  // ASCII equivalent of Ctrl-Z
 	if (verbose) Serial.println();
 
+	WaitResp("+CMGS", 20000);
+	
 	WaitResp("OK", 5000); // the SMS module needs time to return to OK status
 }
 
