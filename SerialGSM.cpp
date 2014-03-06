@@ -101,6 +101,10 @@ void SerialGSM::StartSMS(){
 }
 
 void SerialGSM::Call(char * cellnumber){
+	
+	// Disconnect any existing call/clear released call
+	this->Hangup();
+
 	this->Rcpt(cellnumber);
 	if (verbose) Serial.println(recipient);
 
