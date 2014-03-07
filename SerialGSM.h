@@ -11,12 +11,9 @@ class SerialGSM : public GSMSoftwareSerial {
 public:
   SerialGSM(int rxpin,int txpin);
   void FwdSMS2Serial();
-  void SendSMS();
   void SendSMS(char * cellnumber,char * outmsg);
   void DeleteAllSMS();
   void Reset();
-  void EndSMS();
-  void StartSMS();
   void Call(char * cellnumber);
   void Hangup();
   int ReadLine();
@@ -30,7 +27,6 @@ public:
   char * Sender();
   void Rcpt(char * var1);
   char * Rcpt();
-  void Message(char * var1);
   char * Message();
   void Boot();
   static const int STATUS_SIM_REMOVED = 0;
@@ -49,7 +45,6 @@ public:
   boolean verbose;
   char senderNumber[PHONESIZE + 1];
   char recipient[PHONESIZE + 1];
-  char outMessage[160];
   char inMessage[160];
   
 protected:
