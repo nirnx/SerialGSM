@@ -122,6 +122,9 @@ void SerialGSM::Hangup(){
 	if (verbose) Serial.println();
 
 	WaitResp("OK", 2000);
+	
+	//Let the module return to normal. (Prevents errors)
+	delay(2000);
 }
 
 int SerialGSM::ReadLine(){
