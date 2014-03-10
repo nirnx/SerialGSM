@@ -10,6 +10,7 @@
 class SerialGSM : public GSMSoftwareSerial {
 public:
   SerialGSM(int rxpin,int txpin);
+  void registerSMSCallback(int (*callback)(void));
   void FwdSMS2Serial();
   void SendSMS(char * cellnumber,char * outmsg);
   void DeleteAllSMS();
@@ -19,7 +20,6 @@ public:
   int ReadLine();
   int GetGSMStatus();
   boolean ErrorOccured();
-  int ReceiveSMS();
   int ReceiveCall();
   void Verbose(boolean var1);
   boolean Verbose();
@@ -47,11 +47,17 @@ public:
   char recipient[PHONESIZE + 1];
   char inMessage[160];
   
+  
 protected:
+  int ReceiveSMS();
   boolean WaitResp(char * response, int timeout);
   unsigned long lastRec;
   int lastStatusCode;
   boolean errorOccured;
+
+private:
+  // SMS Receive Callback
+  int (*onReceiveSMS)(void) ;
 };
 
 #endif /* not defined _SerialGSM_H */

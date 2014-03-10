@@ -19,6 +19,10 @@ GSMSoftwareSerial(rxpin,txpin)
 	lastStatusCode=0;
 }
 
+void SerialGSM::registerSMSCallback(int (*callback)(void)){
+	onReceiveSMS = callback;
+}
+
 void SerialGSM::FwdSMS2Serial(){
 	if (verbose) Serial.println("AT+CMGF=1"); // set SMS mode to text
 	this->println("AT+CMGF=1"); // set SMS mode to text
@@ -131,6 +135,12 @@ int SerialGSM::ReadLine(){
 			inMessage[pos]=nc;
 			pos=0;
 			if (verbose) Serial.println(inMessage);
+			
+			// Execute the callback
+			if(ReceiveSMS()){
+				onReceiveSMS();
+			}
+			
 			return 1;
 		}
 		else if (nc=='\r') {
