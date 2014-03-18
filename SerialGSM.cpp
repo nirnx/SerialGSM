@@ -17,6 +17,7 @@ GSMSoftwareSerial(rxpin,txpin)
 {
 	verbose=false;
 	lastStatusCode=0;
+	lastErrorCode=0;
 }
 
 void SerialGSM::registerSMSCallback(int (*callback)(void)){
@@ -188,11 +189,23 @@ int SerialGSM::GetGSMStatus(){
 	return lastStatusCode;
 }
 
-boolean SerialGSM::ErrorOccured(){
-	if (strstr(inMessage, "ERROR") != NULL){
-		errorOccured = true;
+int SerialGSM::GetErrorCode(){
+	char error[3];
+    //Parse the Status Code
+	if (strstr(inMessage, "ERROR: ") != NULL){
+		int pos = 11;
+		if(strstr(inMessage, "+")) pos++; 
+
+		//Read in all numbers
+		int i = 0;
+		while(inMessage[pos + i] != NULL and inMessage[pos + i] != '\n'){
+			error[i] = inMessage[pos + i];
+			i++;
+		}
+
+		lastErrorCode = atoi(error);
 	}
-	return errorOccured;
+	return lastErrorCode;
 }
 
 int SerialGSM::ReceiveSMS(){
@@ -265,7 +278,7 @@ boolean SerialGSM::WaitResp(char * response, int timeout){
 		}
 	
 		//Update events
-		ErrorOccured();
+		GetErrorCode();
 		GetGSMStatus();
 	}
 

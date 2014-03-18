@@ -19,7 +19,7 @@ public:
   void Hangup();
   int ReadLine();
   int GetGSMStatus();
-  boolean ErrorOccured();
+  int GetErrorCode();
   int ReceiveCall();
   void Verbose(boolean var1);
   boolean Verbose();
@@ -53,7 +53,7 @@ protected:
   boolean WaitResp(char * response, int timeout);
   unsigned long lastRec;
   int lastStatusCode;
-  boolean errorOccured;
+  int lastErrorCode;
 
 private:
   // SMS Receive Callback
