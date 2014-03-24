@@ -91,9 +91,15 @@ bool SerialGSM::DeleteAllSMS(){
 }
 
 void SerialGSM::Reset(){
-	if (verbose) Serial.println("AT+CFUN=0,1"); // Reset Modem, Disable Auto Power Saving
-	this->println("AT+CFUN=0,1"); // Reset Modem, Disable Auto Power Saving
+	if (verbose) Serial.println("AT+CFUN=0,1"); // Reset Modem
+	this->println("AT+CFUN=0,1"); // Reset Modem
 	delay(200);
+
+	lastErrorCode = 0;
+	lastStatusCode = 0;
+	memset(senderNumber, 0, PHONESIZE + 1);
+	memset(recipient, 0, PHONESIZE + 1);
+	memset(inMessage, 0, 160);
 	this->ReadLine();
 }
 
