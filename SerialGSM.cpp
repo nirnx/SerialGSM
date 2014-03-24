@@ -24,27 +24,33 @@ void SerialGSM::registerSMSCallback(int (*callback)(void)){
 	onReceiveSMS = callback;
 }
 
-void SerialGSM::FwdSMS2Serial(){
+bool SerialGSM::FwdSMS2Serial(){
+	bool success = false;
+	
 	if (verbose) Serial.println("AT+CMGF=1"); // set SMS mode to text
 	this->println("AT+CMGF=1"); // set SMS mode to text
-	WaitResp("OK", 200);
+	success *= WaitResp("OK", 200);
 	this->ReadLine();
 	if (verbose) Serial.println("AT+CNMI=3,3,0,0"); // set module to send SMS data to serial out upon receipt 
 	this->println("AT+CNMI=3,3,0,0"); // set module to send SMS data to serial out upon receipt 
-	WaitResp("OK", 200);
+	success *= WaitResp("OK", 200);
 	this->ReadLine();
+	
+	return success;
 }
 
-void SerialGSM::SendSMS(char * cellnumber,char * outmsg){
+bool SerialGSM::SendSMS(char * cellnumber,char * outmsg){
+	bool success = true;
+	
 	if (strlen(outmsg) > 140){
 		Serial.println("Error: SMS Message was longer than 140 characters.");
-		return;
+		return success;
 	}
 
 	// Set SMS mode to text
 	if (verbose) Serial.println("AT+CMGF=1");
 	this->println("AT+CMGF=1");
-	WaitResp("OK", 1000);
+	success *= WaitResp("OK", 1000);
 	
 	// Print recipient surrounded with double quotes
 	if (verbose){
@@ -57,7 +63,7 @@ void SerialGSM::SendSMS(char * cellnumber,char * outmsg){
 	this->print(cellnumber);
 	this->println(char(34));
 
-	WaitResp(">", 500);
+	success *= WaitResp(">", 500);
 	delay(500);				//Let the module think
 	
 	
@@ -70,16 +76,18 @@ void SerialGSM::SendSMS(char * cellnumber,char * outmsg){
 	if (verbose) Serial.println();
 	this->print(char(26));
 
-	WaitResp("+CMGS", 20000);	
-	WaitResp("OK", 5000);
+	success *= WaitResp("+CMGS", 20000);	
+	success *= WaitResp("OK", 5000);
 	
 	this->ReadLine();
+	
+	return success;
 }
 
-void SerialGSM::DeleteAllSMS(){
+bool SerialGSM::DeleteAllSMS(){
 	if (verbose) Serial.println("AT+CMGD=1,4"); // delete all SMS
 	this->println("AT+CMGD=1,4"); // delete all SMS
-	WaitResp("OK", 5000);
+	return WaitResp("OK", 5000);
 }
 
 void SerialGSM::Reset(){
@@ -90,7 +98,8 @@ void SerialGSM::Reset(){
 }
 
 
-void SerialGSM::Call(char * cellnumber){
+bool SerialGSM::Call(char * cellnumber){
+	bool success = true;
 	
 	// Disconnect any existing call/clear released call
 	this->Hangup();
@@ -108,12 +117,15 @@ void SerialGSM::Call(char * cellnumber){
 	if (verbose) Serial.println();
 
 	//Wait for connection
-	WaitResp("+SIND: 5,1", 3000);	
+	success *= WaitResp("+SIND: 5,1", 3000);	
 	//Wait for a ring
-	WaitResp("+SIND: 2",  10000);
+	success *= WaitResp("+SIND: 2",  10000);
+	
+	return success;
 }
 
-void SerialGSM::Hangup(){
+bool SerialGSM::Hangup(){
+	bool success = false;
 
 	if (verbose) Serial.print("ATH");
 	this->print("ATH");
@@ -122,10 +134,12 @@ void SerialGSM::Hangup(){
 	this->print(char(13));
 	if (verbose) Serial.println();
 
-	WaitResp("OK", 2000);
+	success = WaitResp("OK", 2000);
 	
 	//Let the module return to normal. (Prevents errors)
 	delay(2000);
+	
+	return success;
 }
 
 int SerialGSM::ReadLine(){

@@ -11,12 +11,12 @@ class SerialGSM : public GSMSoftwareSerial {
 public:
   SerialGSM(int rxpin,int txpin);
   void registerSMSCallback(int (*callback)(void));
-  void FwdSMS2Serial();
-  void SendSMS(char * cellnumber,char * outmsg);
-  void DeleteAllSMS();
+  bool FwdSMS2Serial();
+  bool SendSMS(char * cellnumber,char * outmsg);
+  bool DeleteAllSMS();
   void Reset();
-  void Call(char * cellnumber);
-  void Hangup();
+  bool Call(char * cellnumber);
+  bool Hangup();
   int ReadLine();
   int GetGSMStatus();
   int GetErrorCode();
