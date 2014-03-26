@@ -287,6 +287,10 @@ boolean SerialGSM::WaitResp(char * response, int timeout){
 			responseReceived = strstr(inMessage, response) != NULL;
 		}
 		
+		//Update events
+		GetErrorCode();
+		GetGSMStatus();
+		
 		//Ensure incoming event is not truncated
 		if(responseReceived && !incoming){
 			if (verbose){
@@ -294,12 +298,11 @@ boolean SerialGSM::WaitResp(char * response, int timeout){
 				Serial.print(response);
 				Serial.println("\"");
 			}
+			
+			memset(inMessage, 0, 160);
+			
 			return true;
 		}
-	
-		//Update events
-		GetErrorCode();
-		GetGSMStatus();
 	}
 
 	if (verbose){
