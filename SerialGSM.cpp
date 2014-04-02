@@ -80,7 +80,7 @@ bool SerialGSM::SendSMS(char * cellnumber,char * outmsg){
 	success *= WaitResp("OK", 5000);
 	
 	this->ReadLine();
-	
+	delay(500);
 	return success;
 }
 
@@ -163,6 +163,8 @@ int SerialGSM::ReadLine(){
 			// Execute the callback
 			if(ReceiveSMS()){
 				onReceiveSMS();
+				//Let the module return to normal. (Prevents CMS error 313)
+				delay(500);
 			}
 			
 			return 1;
